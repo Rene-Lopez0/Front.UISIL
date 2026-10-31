@@ -1,8 +1,36 @@
 import "./Iniciosesion.css";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useInicioSesion } from "../hooks/useInicioSesion";
+import { PantallaCarga } from "../Components/PantallaCarga";
 
 export function InicioSesionPage() {
+  const [correo, setcorreo] = useState("");
+  const [contrasena, setcontrasena] = useState("");
+  const [errorvalidacion, seterrorvalidacion] = useState("");
+
+  const sesion = useInicioSesion();
+
+  async function EnviarFormulario(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+
+    if (sesion.cargando) return;
+    seterrorvalidacion("");
+
+    if (contrasena.trim() === "") {
+      seterrorvalidacion("Debe ingresar una contraseña");
+      return;
+    }
+
+    await sesion.Iniciar(correo.trim(), contrasena);
+
+    setcontrasena("");
+  }
+
   return (
     <main className="min-vh-100 d-flex align-items-center bg-light py-4">
+      {sesion.cargando && <PantallaCarga />}
+
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-5 col-xl-4">
@@ -20,7 +48,7 @@ export function InicioSesionPage() {
                   </p>
                 </div>
 
-                <form action="">
+                <form onSubmit={EnviarFormulario}>
                   <div className="mb-3">
                     <label className="form-label">Correo electrónico:</label>
                     <input
@@ -29,6 +57,9 @@ export function InicioSesionPage() {
                       placeholder="Ingrese su correo"
                       autoComplete="username"
                       type="text"
+                      required
+                      value={correo}
+                      onChange={(evento) => setcorreo(evento.target.value)}
                     />
                   </div>
 
@@ -41,13 +72,31 @@ export function InicioSesionPage() {
                       placeholder="Ingrese su contraseña"
                       autoComplete="current-password"
                       type="password"
+                      required
+                      onChange={(evento) => setcontrasena(evento.target.value)}
                     />
                   </div>
 
-                  <button type="button" className="btn btn-success w-100">
+                  <button type="submit" className="btn btn-success w-100">
                     Iniciar sesión
                   </button>
                 </form>
+
+                {errorvalidacion && (
+                  <div className="alert alert-danger mt-3">
+                    {errorvalidacion}
+                  </div>
+                )}
+
+                {sesion.error && (
+                  <div className="alert alert-danger mt-3">{sesion.error}</div>
+                )}
+
+                {sesion.usuario && (
+                  <div className="alert alert-success mt-3">
+                    Credenciales aceptadas: {sesion.usuario.nombreCompleto}
+                  </div>
+                )}
 
                 <p className="text-center text-secondary small mt-4 mb-0">
                   Sistema de gestion UISIL
