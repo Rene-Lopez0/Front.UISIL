@@ -4,12 +4,14 @@ import type { FormEvent } from "react";
 import { useInicioSesion } from "../hooks/useInicioSesion";
 import { PantallaCarga } from "../Components/PantallaCarga";
 
-export function InicioSesionPage() {
+interface InicioSesionProps {
+  sesion: ReturnType<typeof useInicioSesion>;
+}
+
+export function InicioSesionPage({ sesion }: InicioSesionProps) {
   const [correo, setcorreo] = useState("");
   const [contrasena, setcontrasena] = useState("");
   const [errorvalidacion, seterrorvalidacion] = useState("");
-
-  const sesion = useInicioSesion();
 
   async function EnviarFormulario(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
