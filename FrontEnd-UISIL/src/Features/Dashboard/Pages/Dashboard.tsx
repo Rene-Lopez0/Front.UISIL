@@ -54,7 +54,7 @@ export function DashboardPage({ usuario, cerrarSesion }: DashboardProps) {
                       </Link>
                     </div>
                     <span className="dashboard-emblema" aria-hidden="true">
-                      z
+                      U
                     </span>
                   </section>
 
