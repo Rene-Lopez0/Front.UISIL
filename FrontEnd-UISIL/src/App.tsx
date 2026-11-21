@@ -30,7 +30,7 @@ function App() {
                 cerrarSesion={sesion.CerrarSesion}
               />
             ) : (
-              <Navigate to={"/inicio-sesion replace"} />
+              <Navigate to="/inicio-sesion" replace />
             )
           }
         />

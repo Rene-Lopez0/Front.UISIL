@@ -21,6 +21,7 @@ export function MenuLateral({ nombre, cerrarSesion }: MenuLateralProps) {
           Inicio
         </NavLink>
         <NavLink to="/dashboard/perfil">Mi perfil</NavLink>
+        <NavLink to="/dashboard/usuarios">Mantenimiento de usuarios</NavLink>
       </nav>
 
       <div className="dashboard-menu-pie">

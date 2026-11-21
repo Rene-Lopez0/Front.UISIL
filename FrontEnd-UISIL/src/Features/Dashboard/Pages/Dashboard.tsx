@@ -1,6 +1,7 @@
 import { Link, Navigate, Route, Routes } from "react-router";
 import type { Usuariosesion } from "../../Auth/services/AuthAPI";
 import { MenuLateral } from "../Components/MenuLateral";
+import { UsuarioPage } from "../../Usuarios/Pages/Usuarios";
 import "./Dashboard.css";
 
 interface DashboardProps {
@@ -111,6 +112,7 @@ export function DashboardPage({ usuario, cerrarSesion }: DashboardProps) {
               }
             />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="usuarios" element={<UsuarioPage />} />
           </Routes>
         </main>
       </div>
