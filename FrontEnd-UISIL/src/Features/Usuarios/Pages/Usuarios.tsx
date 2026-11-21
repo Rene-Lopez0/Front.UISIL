@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FormularioUsuario } from "../Components/FormularioUsuario";
 import { useUsuarios } from "../Hooks/useUsuarios";
 import type { NuevoUsuario } from "../Services/UsuariosAPI";
-import { Await } from "react-router";
 
 export function UsuarioPage() {
   const mantenimiento = useUsuarios();
