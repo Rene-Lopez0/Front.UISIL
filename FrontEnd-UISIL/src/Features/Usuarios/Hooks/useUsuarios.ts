@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { UsuariosAPI } from "../Services/UsuariosAPI";
 import type { NuevoUsuario, Usuario } from "../Services/UsuariosAPI";
