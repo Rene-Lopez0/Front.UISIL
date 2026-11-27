@@ -53,6 +53,19 @@ export const UsuariosAPI = {
     return resultado.valorRetorno;
   },
 
+  async Eliminar(IdUsuario: number): Promise<void> {
+    const respuesta = await http.delete<{
+      ok: boolean;
+      mensaje: string | null;
+    }>("/usuarios", { data: { IdUsuario } });
+
+    if (respuesta.data?.ok !== true) {
+      throw new Error(
+        respuesta.data?.mensaje || "No se pudo eliminar el usuario",
+      );
+    }
+  },
+
   // Envía los datos al servidor y comprueba si el alta fue aceptada.
   async Crear(usuario: NuevoUsuario): Promise<void> {
     const respuesta = await http.post<{ ok: boolean; mensaje: string | null }>(

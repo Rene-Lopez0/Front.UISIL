@@ -20,6 +20,8 @@ export function useUsuarios() {
   const [consulta, setConsulta] = useState(0);
   const [guardando, setGuardando] = useState(false);
   const [errorGuardado, setErrorGuardado] = useState("");
+  const [eliminado, setEliminado] = useState(false);
+  const [errorEliminacion, setErrorEliminacion] = useState("");
 
   // Carga la lista al entrar y cada vez que cambia el número de consulta.
   useEffect(() => {
@@ -69,6 +71,26 @@ export function useUsuarios() {
     }
   }
 
+  async function Eliminar(IdUsuario: number) {
+    if (eliminado) return false;
+
+    setErrorEliminacion("");
+    setEliminado(true);
+
+    try {
+      await UsuariosAPI.Eliminar(IdUsuario);
+      Recargar();
+      return true;
+    } catch (error) {
+      setErrorEliminacion(
+        ObtenerMensaje(error, "No se pudo eliminar el usuario"),
+      );
+      return false;
+    } finally {
+      setEliminado(false);
+    }
+  }
+
   return {
     usuarios,
     cargando,
@@ -78,5 +100,9 @@ export function useUsuarios() {
     errorGuardado,
     setErrorGuardado,
     Crear,
+    eliminado,
+    errorEliminacion,
+    setErrorEliminacion,
+    Eliminar,
   };
 }

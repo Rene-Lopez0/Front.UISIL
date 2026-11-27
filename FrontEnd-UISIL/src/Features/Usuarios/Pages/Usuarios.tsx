@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { FormularioUsuario } from "../Components/FormularioUsuario";
 import { useUsuarios } from "../Hooks/useUsuarios";
-import type { NuevoUsuario } from "../Services/UsuariosAPI";
+import type { NuevoUsuario, Usuario } from "../Services/UsuariosAPI";
+import { ConfirmarEliminarUsuario } from "../Components/ConfirmarEliminarUsuario";
 
 export function UsuarioPage() {
   const mantenimiento = useUsuarios();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const [usuarioEliminar, setUsuarioEliminar] = useState<Usuario | null>(null);
 
   function AbrirFormulario() {
     mantenimiento.setErrorGuardado("");
@@ -23,6 +25,22 @@ export function UsuarioPage() {
     }
   }
 
+  function SeleccionarUsuarioAEliminar(usuario: Usuario) {
+    mantenimiento.setErrorEliminacion("");
+    setMensaje("");
+    setUsuarioEliminar(usuario);
+  }
+
+  async function EliminarUsuario() {
+    if (!usuarioEliminar) return;
+
+    const eliminado = await mantenimiento.Eliminar(usuarioEliminar.idUsuario);
+    if (eliminado) {
+      setUsuarioEliminar(null);
+      setMensaje("El usuario se eliminó correctamente.");
+    }
+  }
+
   return (
     <>
       <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
@@ -32,6 +50,7 @@ export function UsuarioPage() {
           <button
             className="btn btn-success"
             type="button"
+            disabled={usuarioEliminar !== null}
             onClick={AbrirFormulario}
           >
             Crear usuario
@@ -47,6 +66,16 @@ export function UsuarioPage() {
           error={mantenimiento.errorGuardado}
           guardar={GuardarUsuario}
           cancelar={() => setMostrarFormulario(false)}
+        />
+      )}
+
+      {usuarioEliminar && (
+        <ConfirmarEliminarUsuario
+          usuario={usuarioEliminar}
+          eliminando={mantenimiento.eliminado}
+          error={mantenimiento.errorEliminacion}
+          confirmar={EliminarUsuario}
+          cancelar={() => setUsuarioEliminar(null)}
         />
       )}
 
@@ -87,6 +116,7 @@ export function UsuarioPage() {
                       <th scope="col">Correo Electrónico</th>
                       <th scope="col">Teléfono</th>
                       <th scope="col">Rol</th>
+                      <th scope="col">Acciones</th>
                     </tr>
                   </thead>
 
@@ -108,6 +138,18 @@ export function UsuarioPage() {
                         <td>{usuario.correo}</td>
                         <td>{usuario.telefono}</td>
                         <td>{usuario.nombreRol}</td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            type="button"
+                            disabled={
+                              mostrarFormulario || usuarioEliminar !== null
+                            }
+                            onClick={() => SeleccionarUsuarioAEliminar(usuario)}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
